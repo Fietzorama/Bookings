@@ -35,7 +35,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	//Storing the IP Address as a string in the session
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "home.page.tmpl.html", &models.TemplateData{}) //&TemplateData{} empty!
+	render.RenderTemplate(w, "home.page.tmpl.html", &models.TemplateData{})
 }
 
 // About respond the request to the about page (about page handler)
@@ -45,8 +45,7 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap["Test"] = "hello, again."
 
 	//Pull that value out of the session
-	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip") // if nothing in String is empty
-		
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = remoteIP
 
 	// send the data to the template
@@ -54,6 +53,3 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 		StringMap: stringMap,
 	})
 }
-
-// grab the remote IP address of the person visiting my site and store it in the home page.
-// in the home handler

@@ -11,10 +11,6 @@ import (
 	"path/filepath"
 )
 
-//GOAL: We're not accessing the disk to get the template every time we load the page.
-//Instead, we build a map that holds all of our templates, put that in an application wide site config
-//and we can render our templates.
-
 var functions = template.FuncMap{}
 
 var app *config.AppConfig
@@ -25,10 +21,9 @@ func NewTemplates(a *config.AppConfig) {
 }
 
 // AddDefaultData data that want to be available on every page
-func AddDefaultData(td *models.TemplateData) *models.TemplateData{
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
 	return td //templateData
 }
-
 
 // RenderTemplate takes response writer and string (name of template) pass- and read it to browser
 func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
@@ -56,7 +51,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 
 	_, err := buf.WriteTo(w)
 	if err != nil {
-		fmt.Println("Error wirting template to brower", err)
+		fmt.Println("Error writing template to browser", err)
 	}
 
 }
@@ -64,8 +59,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 // CreateTemplateCache creates template as map, go through and pass our templates and return map of *.page.tmpl.html
 func CreateTemplateCache() (map[string]*template.Template, error) {
 
-	// Go to the templates folder, find everything in templates folder that's at the root level of my application
-	//// and get all of the files that start with anything but definitely end with *.page.tmpl.html
+	// Go to the templates folder, find everything end with *.page.tmpl.html
 	myCache := map[string]*template.Template{}
 
 	// Go to template folder, find everything that start with *(anything) but end with .page.tmpl.html;
@@ -74,10 +68,6 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		return myCache, err
 	}
 
-	//For every page that I find, I am going to get the index and the first time through will be zero A
-	//and then get the actual page itself, go to one because we start counting at zero
-	//and four loops and the second one and the second value would be homePageTemplate
-	//not just about page that template, it's turning the full path to that.
 	for _, page := range pages {
 		name := filepath.Base(page)
 
@@ -109,12 +99,3 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	}
 	return myCache, nil
 }
-
-/* Conclusion:
-So when I run this, my cache will actually have two entries:
-	1. "about.page.tmpl.html"
-	2. "home.page.tmpl.html
-when look it up, it's going to give a fully parsed and ready to use template
-It's actually a pointer to a template
-When I need to render a template, I need to have access to this cache
-*/
