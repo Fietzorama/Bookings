@@ -16,6 +16,7 @@
                 <br>
                 <br>
                 <p4>
+                   <!-- Pulling Data from the handler into our template -->
                     {{if ne (index .StringMap "remote_ip") ""}}
                         Your IP Address is: {{index .StringMap "remote_ip"}}
                     {{else}}
