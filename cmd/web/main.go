@@ -45,10 +45,16 @@ func main() {
 
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
 
+	//The HTTP Server
 	srv := &http.Server{
 		Addr:    portNumber,
 		Handler: routes(&app),
 	}
+
+	// HTTP service running in this program as well. The valve context is set
+	// as a base context on the server listener at the point where we instantiate
+	// the server - look lower.
+	// Run the server
 	err = srv.ListenAndServe()
 	log.Fatal(err)
 
